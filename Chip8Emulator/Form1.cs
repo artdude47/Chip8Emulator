@@ -16,5 +16,20 @@ namespace Chip8Emulator
         {
             InitializeComponent();
         }
+
+        private void loadROMToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Load ROM clicked!");
+        }
+
+        private void closeROMToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Close ROM clicked!");
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
