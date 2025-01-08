@@ -35,6 +35,9 @@ namespace Chip8Emulator
             this.closeROMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBoxDisplay = new System.Windows.Forms.PictureBox();
+            this.emulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xSpeedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDisplay)).BeginInit();
             this.SuspendLayout();
@@ -42,7 +45,8 @@ namespace Chip8Emulator
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.emulationToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(983, 24);
@@ -62,21 +66,21 @@ namespace Chip8Emulator
             // loadROMToolStripMenuItem
             // 
             this.loadROMToolStripMenuItem.Name = "loadROMToolStripMenuItem";
-            this.loadROMToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.loadROMToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.loadROMToolStripMenuItem.Text = "Load ROM";
             this.loadROMToolStripMenuItem.Click += new System.EventHandler(this.loadROMToolStripMenuItem_Click);
             // 
             // closeROMToolStripMenuItem
             // 
             this.closeROMToolStripMenuItem.Name = "closeROMToolStripMenuItem";
-            this.closeROMToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.closeROMToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeROMToolStripMenuItem.Text = "Close ROM";
             this.closeROMToolStripMenuItem.Click += new System.EventHandler(this.closeROMToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -90,6 +94,27 @@ namespace Chip8Emulator
             this.pictureBoxDisplay.TabIndex = 1;
             this.pictureBoxDisplay.TabStop = false;
             this.pictureBoxDisplay.Resize += new System.EventHandler(this.pictureBoxDisplay_Resize);
+            // 
+            // emulationToolStripMenuItem
+            // 
+            this.emulationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pauseToolStripMenuItem,
+            this.xSpeedToolStripMenuItem});
+            this.emulationToolStripMenuItem.Name = "emulationToolStripMenuItem";
+            this.emulationToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
+            this.emulationToolStripMenuItem.Text = "Emulation";
+            // 
+            // pauseToolStripMenuItem
+            // 
+            this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
+            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pauseToolStripMenuItem.Text = "Pause";
+            // 
+            // xSpeedToolStripMenuItem
+            // 
+            this.xSpeedToolStripMenuItem.Name = "xSpeedToolStripMenuItem";
+            this.xSpeedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.xSpeedToolStripMenuItem.Text = "2x Speed";
             // 
             // Form1
             // 
@@ -118,6 +143,9 @@ namespace Chip8Emulator
         private System.Windows.Forms.ToolStripMenuItem closeROMToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBoxDisplay;
+        private System.Windows.Forms.ToolStripMenuItem emulationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pauseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem xSpeedToolStripMenuItem;
     }
 }
 
