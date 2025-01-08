@@ -74,7 +74,7 @@ namespace Chip8Emulator
                     {
                         case 0x00E0: // Clear the display
                             Array.Clear(Display, 0, Display.Length);
-                            pc += 2; // Move to next instruction
+                            IncreasePC(2);
                             break;
 
                         case 0x00EE: // Return from subroutine
@@ -99,33 +99,33 @@ namespace Chip8Emulator
 
                 case 0x3000: // Skip next instruction if VX == NN
                     if (V[x] == nn)
-                        pc += 4; // Skip next instruction
+                        IncreasePC(4);
                     else
-                        pc += 2; // Move to next instruction
+                        IncreasePC(2);
                     break;
 
                 case 0x4000: // Skip next instruction if VX != NN
                     if (V[x] != nn)
-                        pc += 4; // Skip next instruction
+                        IncreasePC(4);
                     else
-                        pc += 2; // Move to next instruction
+                        IncreasePC(2);
                     break;
 
                 case 0x5000: // Skip the next instruction iv VX == VY
                     if (V[x] == V[y])
-                        pc += 4;
+                        IncreasePC(4);
                     else
-                        pc += 2;
+                        IncreasePC(2);
                     break;
 
                 case 0x6000: // Set VX to NN
                     V[x] = nn;
-                    pc += 2;
+                    IncreasePC(2);
                     break;
 
                 case 0x7000: // Add NN to VX
                     V[x] += nn;
-                    pc += 2;
+                    IncreasePC(2);
                     break;
 
                 case 0x8000: // 8xNN
@@ -133,29 +133,29 @@ namespace Chip8Emulator
                     {
                         case 0x0: // Set VX = VY
                             V[x] = V[y];
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x1: // Set VX = VX OR VY
                             V[x] |= V[y];
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x2: // Set VX = VX AND VY
                             V[x] &= V[y];
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x3: // Set VX = VX XOR VY
                             V[x] ^= V[y];
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x4: // Set VX = VX + VY, VF = Carry
                             ushort sum = (ushort)(V[x] + V[y]);
                             V[x] = (byte)(sum & 0xFF);
                             V[0xF] = (byte)((sum > 255) ? 1 : 0);
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x5: // Set VX = VX - VY, VF = NOT Borrow
@@ -163,27 +163,27 @@ namespace Chip8Emulator
                             byte tempY = V[y];
                             V[x] -= V[y];
                             V[0xF] = (byte)((tempX >= tempY) ? 1 : 0);
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x6: // SHR VX {, VY}
                             tempX = V[x];
                             V[x] >>= 1;
                             V[0xF] = (byte)(tempX & 0x01);
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x7: // SUBN VX, VY
                             V[x] = (byte)(V[y] - V[x]);
                             V[0xF] = (byte)((V[y] >= V[x]) ? 1 : 0);
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0xE: // SHL VX {, VY}
                             tempX = V[x];
                             V[x] <<= 1;
                             V[0xF] = (byte)((tempX & 0x80) >> 7);
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         default:
@@ -193,14 +193,14 @@ namespace Chip8Emulator
 
                 case 0x9000:
                     if (V[x] != V[y])
-                        pc += 4;
+                        IncreasePC(4);
                     else
-                        pc += 2;
+                        IncreasePC(2);
                     break;
 
                 case 0xA000: // Set I to NNN
                     I = nnn;
-                    pc += 2;
+                    IncreasePC(2);
                     break;
 
                 case 0xB000:
@@ -211,7 +211,7 @@ namespace Chip8Emulator
                     Random random = new Random();
                     byte randomByte = (byte)random.Next(0, 256);
                     V[x] = (byte)(randomByte & nn);
-                    pc += 2;
+                    IncreasePC(2);
                     break;
 
                 case 0xD000: // Draw a sprite at (VX, VY) with height N
@@ -238,7 +238,7 @@ namespace Chip8Emulator
                             }
                         }
 
-                        pc += 2; // Move to the next instruction
+                        IncreasePC(2);
                     }
                     break;
 
@@ -247,23 +247,23 @@ namespace Chip8Emulator
                     {
                         case 0x07: // VX = delay timer
                             V[x] = delayTimer;
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x15: // delay timer = VX
                             delayTimer = V[x];
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x18: // sound timer = VX
                             soundTimer = V[x];
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x1E: // Add VX to I
                             I += V[x];
                             if (I > 0xFFF) V[0xF] = 1; // Set VF if overflow occurs
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x33: // Store BCD representation of VX in memory locations I, I+1, I+2
@@ -271,7 +271,7 @@ namespace Chip8Emulator
                             memory[I] = (byte)(value / 100);
                             memory[I + 1] = (byte)((value / 10) % 10);
                             memory[I + 2] = (byte)(value % 10);
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x55: //Store V0 through VX in memory starting at I
@@ -279,7 +279,7 @@ namespace Chip8Emulator
                             {
                                 memory[I + i] = V[i];
                             }
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         case 0x65: // Read V0 through Vx from memory starting at I
@@ -287,7 +287,7 @@ namespace Chip8Emulator
                             {
                                 V[i] = memory[I + i];
                             }
-                            pc += 2;
+                            IncreasePC(2);
                             break;
 
                         default:
@@ -299,7 +299,6 @@ namespace Chip8Emulator
                     throw new NotImplementedException($"Unknown opcode: 0x{opcode:X4}");
             }
         }
-
 
         public void EmulateCycle()
         {
@@ -313,6 +312,11 @@ namespace Chip8Emulator
             if (delayTimer > 0) delayTimer--;
             if (soundTimer > 0) soundTimer--;
 
+        }
+
+        private void IncreasePC(int amount)
+        {
+            pc += (ushort)amount;
         }
 
     }
