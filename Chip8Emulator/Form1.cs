@@ -41,7 +41,6 @@ namespace Chip8Emulator
                     byte[] romData = System.IO.File.ReadAllBytes(openFileDialog.FileName);
                     chip8.LoadROM(romData);
                     emulationTimer.Start();
-                    MessageBox.Show("ROM loaded successfully!", "Success", MessageBoxButtons.OK);
                 }
                 catch (Exception ex)
                 {
@@ -75,7 +74,7 @@ namespace Chip8Emulator
 
         private void RenderGraphics()
         {
-            int scale = 15;
+            int scale = Math.Min(pictureBoxDisplay.Width / 64, pictureBoxDisplay.Height / 32);
             Bitmap bitmap = new Bitmap(64 * scale, 32 * scale);
 
             using (Graphics g = Graphics.FromImage(bitmap))
@@ -95,6 +94,11 @@ namespace Chip8Emulator
             }
 
             pictureBoxDisplay.Image = bitmap;
+        }
+
+        private void pictureBoxDisplay_Resize(object sender, EventArgs e)
+        {
+            RenderGraphics();
         }
     }
 }
