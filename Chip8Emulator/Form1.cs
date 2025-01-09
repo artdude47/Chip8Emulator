@@ -53,7 +53,7 @@ namespace Chip8Emulator
         {
             emulationTimer.Stop();
             chip8.Initialize();
-            MessageBox.Show("Emulator reset.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            RenderGraphics();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

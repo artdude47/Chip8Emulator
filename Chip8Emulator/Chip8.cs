@@ -47,6 +47,8 @@ namespace Chip8Emulator
             Array.Clear(V, 0, V.Length);
             stack.Clear();
             Display = new bool[64, 32];
+
+            Array.Copy(fontSet, 0, memory, 0x000, fontSet.Length);
         }
 
         public void InitializeSound()
@@ -329,7 +331,6 @@ namespace Chip8Emulator
                             Console.WriteLine("Waiting for key release...");
                             break;
 
-
                         case 0x15: // delay timer = VX
                             delayTimer = V[x];
                             IncreasePC(2);
@@ -343,6 +344,12 @@ namespace Chip8Emulator
                         case 0x1E: // Add VX to I
                             I += V[x];
                             if (I > 0xFFF) V[0xF] = 1; // Set VF if overflow occurs
+                            IncreasePC(2);
+                            break;
+
+                        case 0x29: // Set I = location of sprite for digit VX
+                            V[x] &= 0x0F;
+                            I = (ushort)(V[x] * 5);
                             IncreasePC(2);
                             break;
 
@@ -415,5 +422,25 @@ namespace Chip8Emulator
         {
             pc += (ushort)amount;
         }
+
+        private readonly byte[] fontSet = new byte[]
+        {
+            0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+            0x20, 0x60, 0x20, 0x20, 0x70, // 1
+            0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+            0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+            0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+            0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+            0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+            0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+            0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+            0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+            0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+            0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+            0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+            0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+            0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+            0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+        };
     }
 }
