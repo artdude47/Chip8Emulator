@@ -15,6 +15,9 @@ namespace Chip8Emulator
         private Chip8 chip8 = new Chip8();
         private Timer emulationTimer;
 
+        private bool isPaused = false;
+        private bool isFastSpeed = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -154,6 +157,34 @@ namespace Chip8Emulator
                 case Keys.X: chip8.Keypad[0x0] = false; break;
                 case Keys.C: chip8.Keypad[0xB] = false; break;
                 case Keys.V: chip8.Keypad[0xF] = false; break;
+            }
+        }
+
+        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (isPaused)
+            {
+                emulationTimer.Start();
+                isPaused = false;
+            }
+            else
+            {
+                emulationTimer.Stop();
+                isPaused = true;
+            }
+        }
+
+        private void xSpeedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (isFastSpeed)
+            {
+                emulationTimer.Interval = 16;
+                isFastSpeed = false;
+            }
+            else
+            {
+                emulationTimer.Interval = 8;
+                isFastSpeed = true;
             }
         }
     }

@@ -34,10 +34,10 @@ namespace Chip8Emulator
             this.loadROMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeROMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBoxDisplay = new System.Windows.Forms.PictureBox();
             this.emulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xSpeedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBoxDisplay = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDisplay)).BeginInit();
             this.SuspendLayout();
@@ -66,34 +66,23 @@ namespace Chip8Emulator
             // loadROMToolStripMenuItem
             // 
             this.loadROMToolStripMenuItem.Name = "loadROMToolStripMenuItem";
-            this.loadROMToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadROMToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.loadROMToolStripMenuItem.Text = "Load ROM";
             this.loadROMToolStripMenuItem.Click += new System.EventHandler(this.loadROMToolStripMenuItem_Click);
             // 
             // closeROMToolStripMenuItem
             // 
             this.closeROMToolStripMenuItem.Name = "closeROMToolStripMenuItem";
-            this.closeROMToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeROMToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.closeROMToolStripMenuItem.Text = "Close ROM";
             this.closeROMToolStripMenuItem.Click += new System.EventHandler(this.closeROMToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // pictureBoxDisplay
-            // 
-            this.pictureBoxDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxDisplay.Location = new System.Drawing.Point(0, 24);
-            this.pictureBoxDisplay.Name = "pictureBoxDisplay";
-            this.pictureBoxDisplay.Size = new System.Drawing.Size(983, 455);
-            this.pictureBoxDisplay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBoxDisplay.TabIndex = 1;
-            this.pictureBoxDisplay.TabStop = false;
-            this.pictureBoxDisplay.Resize += new System.EventHandler(this.pictureBoxDisplay_Resize);
             // 
             // emulationToolStripMenuItem
             // 
@@ -106,15 +95,30 @@ namespace Chip8Emulator
             // 
             // pauseToolStripMenuItem
             // 
+            this.pauseToolStripMenuItem.CheckOnClick = true;
             this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
             this.pauseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.pauseToolStripMenuItem.Text = "Pause";
+            this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
             // 
             // xSpeedToolStripMenuItem
             // 
+            this.xSpeedToolStripMenuItem.CheckOnClick = true;
             this.xSpeedToolStripMenuItem.Name = "xSpeedToolStripMenuItem";
             this.xSpeedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.xSpeedToolStripMenuItem.Text = "2x Speed";
+            this.xSpeedToolStripMenuItem.Click += new System.EventHandler(this.xSpeedToolStripMenuItem_Click);
+            // 
+            // pictureBoxDisplay
+            // 
+            this.pictureBoxDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxDisplay.Location = new System.Drawing.Point(0, 24);
+            this.pictureBoxDisplay.Name = "pictureBoxDisplay";
+            this.pictureBoxDisplay.Size = new System.Drawing.Size(983, 455);
+            this.pictureBoxDisplay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBoxDisplay.TabIndex = 1;
+            this.pictureBoxDisplay.TabStop = false;
+            this.pictureBoxDisplay.Resize += new System.EventHandler(this.pictureBoxDisplay_Resize);
             // 
             // Form1
             // 
