@@ -327,7 +327,6 @@ namespace Chip8Emulator
 
                             // No key release detected; remain halted
                             Console.WriteLine("Waiting for key release...");
-                            //pc -= 2; // Decrement PC to retry this opcode on the next cycle
                             break;
 
 
@@ -393,13 +392,22 @@ namespace Chip8Emulator
         {
             if (delayTimer > 0)
             {
-                Console.WriteLine($"Delay Timer: {delayTimer}. Counting down");
                 delayTimer--;
             }
             if (soundTimer > 0)
             {
                 soundTimer--;
-                if (soundTimer == 1) PlayBeep();
+                
+                if (soundTimer > 0)
+                {
+                    PlayBeep();
+                } else
+                {
+                    StopBeep();
+                }
+            } else
+            {
+                StopBeep();
             }
         }
 
