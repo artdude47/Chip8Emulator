@@ -18,7 +18,7 @@ namespace Chip8Emulator
         public Form1()
         {
             InitializeComponent();
-
+            this.KeyPreview = true;
             emulationTimer = new Timer
             {
                 Interval = 16 // Roughly 60 Hz
@@ -64,6 +64,8 @@ namespace Chip8Emulator
         private void Form1_Load(object sender, EventArgs e)
         {
             chip8.Initialize();
+            this.KeyDown += Form1_KeyDown;
+            this.KeyUp += Form1_KeyUp;
         }
 
         private void EmulationTimer_Tick(object sender, EventArgs e)
@@ -99,6 +101,59 @@ namespace Chip8Emulator
         private void pictureBoxDisplay_Resize(object sender, EventArgs e)
         {
             RenderGraphics();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.D1: chip8.Keypad[0x1] = true; break;
+                case Keys.D2: chip8.Keypad[0x2] = true; break;
+                case Keys.D3: chip8.Keypad[0x3] = true; break;
+                case Keys.D4: chip8.Keypad[0xC] = true; break;
+
+                case Keys.Q: chip8.Keypad[0x4] = true; break;
+                case Keys.W: chip8.Keypad[0x5] = true; break;
+                case Keys.E: chip8.Keypad[0x6] = true; break;
+                case Keys.R: chip8.Keypad[0xD] = true; break;
+
+                case Keys.A: chip8.Keypad[0x7] = true; break;
+                case Keys.S: chip8.Keypad[0x8] = true; break;
+                case Keys.D: chip8.Keypad[0x9] = true; break;
+                case Keys.F: chip8.Keypad[0xE] = true; break;
+
+                case Keys.Z: chip8.Keypad[0xA] = true; break;
+                case Keys.X: chip8.Keypad[0x0] = true; break;
+                case Keys.C: chip8.Keypad[0xB] = true; break;
+                case Keys.V: chip8.Keypad[0xF] = true; break;
+            }
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            // Reset the key state when released
+            switch (e.KeyCode)
+            {
+                case Keys.D1: chip8.Keypad[0x1] = false; break;
+                case Keys.D2: chip8.Keypad[0x2] = false; break;
+                case Keys.D3: chip8.Keypad[0x3] = false; break;
+                case Keys.D4: chip8.Keypad[0xC] = false; break;
+
+                case Keys.Q: chip8.Keypad[0x4] = false; break;
+                case Keys.W: chip8.Keypad[0x5] = false; break;
+                case Keys.E: chip8.Keypad[0x6] = false; break;
+                case Keys.R: chip8.Keypad[0xD] = false; break;
+
+                case Keys.A: chip8.Keypad[0x7] = false; break;
+                case Keys.S: chip8.Keypad[0x8] = false; break;
+                case Keys.D: chip8.Keypad[0x9] = false; break;
+                case Keys.F: chip8.Keypad[0xE] = false; break;
+
+                case Keys.Z: chip8.Keypad[0xA] = false; break;
+                case Keys.X: chip8.Keypad[0x0] = false; break;
+                case Keys.C: chip8.Keypad[0xB] = false; break;
+                case Keys.V: chip8.Keypad[0xF] = false; break;
+            }
         }
     }
 }

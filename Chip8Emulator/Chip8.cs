@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 
 namespace Chip8Emulator
 {
@@ -27,7 +27,13 @@ namespace Chip8Emulator
         public bool[,] Display { get; private set; } = new bool[64, 32];
 
         // 16 key keypad
+        private bool[] previousKeyState = new bool[16]; // Track key states from the previous cycle
         public bool[] Keypad { get; private set; } = new bool[16];
+        bool waitingForKey = false;
+
+        //Sound
+        private WaveOutEvent waveOut;
+        private SignalGenerator signalGenerator;
 
         public void Initialize()
         {
@@ -35,12 +41,36 @@ namespace Chip8Emulator
             I = 0;
             delayTimer = 0;
             soundTimer = 0;
+            InitializeSound();
 
             //Clear memory, resgisters, stack and display
             Array.Clear(memory, 0, memory.Length);
             Array.Clear(V, 0, V.Length);
             stack.Clear();
             Display = new bool[64, 32];
+        }
+
+        public void InitializeSound()
+        {
+            signalGenerator = new SignalGenerator()
+            {
+                Gain = 0.5,
+                Frequency = 440,
+                Type = SignalGeneratorType.Sin
+            };
+
+            waveOut = new WaveOutEvent();
+            waveOut.Init(signalGenerator);
+        }
+
+        public void PlayBeep()
+        {
+            waveOut.Play();
+        }
+
+        public void StopBeep()
+        {
+            waveOut.Stop();
         }
 
         public void LoadROM(byte[] rom)
@@ -242,6 +272,27 @@ namespace Chip8Emulator
                     }
                     break;
 
+                case 0xE000:
+                    switch (nn)
+                    {
+                        case 0xA1: //Skip next instruction if key in VX is not pressed
+                            Console.WriteLine($"Checking if key {V[x]:X} is NOT pressed.");
+                            if (!Keypad[V[x]])
+                                IncreasePC(4);
+                            else
+                                IncreasePC(2);
+                            break;
+
+                        case 0x9E: // Skip next instruction if key in VX is pressed
+                            Console.WriteLine($"Checking if key {V[x]:X} is pressed.");
+                            if (Keypad[V[x]])
+                                IncreasePC(4);
+                            else
+                                IncreasePC(2);
+                            break;
+                    }
+                    break;
+
                 case 0xF000: // FxNN opcodes
                     switch (nn)
                     {
@@ -249,6 +300,25 @@ namespace Chip8Emulator
                             V[x] = delayTimer;
                             IncreasePC(2);
                             break;
+
+                        case 0x0A: // Fx0A: Wait for a key release and store it in VX
+                            for (int i = 0; i < Keypad.Length; i++)
+                            {
+                                // Check for a transition from pressed (previous frame) to released (current frame)
+                                if (previousKeyState[i] && !Keypad[i])
+                                {
+                                    V[x] = (byte)i; // Store the key index in Vx
+                                    Console.WriteLine($"Key {i:X} released and stored in V{x:X}");
+                                    IncreasePC(2); // Resume execution
+                                    return;
+                                }
+                            }
+
+                            // No key release detected; remain halted
+                            Console.WriteLine("Waiting for key release...");
+                            pc -= 2; // Decrement PC to retry this opcode on the next cycle
+                            break;
+
 
                         case 0x15: // delay timer = VX
                             delayTimer = V[x];
@@ -303,21 +373,21 @@ namespace Chip8Emulator
         public void EmulateCycle()
         {
             ushort opcode = FetchOpcode();
-            Console.WriteLine($"PC: {pc:X4}, Opcode: {opcode:X4}, I: {I:X4}");
             DecodeAndExecute(opcode);
 
-            Console.WriteLine($"PC after execution: {pc:X4}");
-
-
             if (delayTimer > 0) delayTimer--;
-            if (soundTimer > 0) soundTimer--;
+            if (soundTimer > 0)
+            {
+                soundTimer--;
+                if (soundTimer == 1) PlayBeep();
+            }
 
+            Array.Copy(Keypad, previousKeyState, Keypad.Length);
         }
 
         private void IncreasePC(int amount)
         {
             pc += (ushort)amount;
         }
-
     }
 }
