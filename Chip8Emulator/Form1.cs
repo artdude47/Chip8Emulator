@@ -71,6 +71,7 @@ namespace Chip8Emulator
         private void EmulationTimer_Tick(object sender, EventArgs e)
         {
             chip8.EmulateCycle();
+            chip8.SimulateTimers();
             RenderGraphics();
         }
 

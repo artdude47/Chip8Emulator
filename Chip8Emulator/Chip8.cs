@@ -27,9 +27,8 @@ namespace Chip8Emulator
         public bool[,] Display { get; private set; } = new bool[64, 32];
 
         // 16 key keypad
-        private bool[] previousKeyState = new bool[16]; // Track key states from the previous cycle
         public bool[] Keypad { get; private set; } = new bool[16];
-        bool waitingForKey = false;
+        public ushort pressedKey = 255;
 
         //Sound
         private WaveOutEvent waveOut;
@@ -276,7 +275,6 @@ namespace Chip8Emulator
                     switch (nn)
                     {
                         case 0xA1: //Skip next instruction if key in VX is not pressed
-                            Console.WriteLine($"Checking if key {V[x]:X} is NOT pressed.");
                             if (!Keypad[V[x]])
                                 IncreasePC(4);
                             else
@@ -284,7 +282,6 @@ namespace Chip8Emulator
                             break;
 
                         case 0x9E: // Skip next instruction if key in VX is pressed
-                            Console.WriteLine($"Checking if key {V[x]:X} is pressed.");
                             if (Keypad[V[x]])
                                 IncreasePC(4);
                             else
@@ -304,19 +301,33 @@ namespace Chip8Emulator
                         case 0x0A: // Fx0A: Wait for a key release and store it in VX
                             for (int i = 0; i < Keypad.Length; i++)
                             {
-                                // Check for a transition from pressed (previous frame) to released (current frame)
-                                if (previousKeyState[i] && !Keypad[i])
+                                // Check if the key is pressed
+                                if (Keypad[i] && pressedKey == 255)
                                 {
-                                    V[x] = (byte)i; // Store the key index in Vx
-                                    Console.WriteLine($"Key {i:X} released and stored in V{x:X}");
-                                    IncreasePC(2); // Resume execution
+                                    pressedKey = (ushort)i;
+                                    Console.WriteLine($"Key {i:X} pressed");
+                                    pc -= 2;
                                     return;
+                                }
+                                else
+                                {
+                                    if (pressedKey != 255)
+                                    {
+                                        if (!Keypad[pressedKey]) //Key has been lifted
+                                        {
+                                            Console.WriteLine("Key lifted");
+                                            V[x] = (byte)pressedKey;
+                                            pressedKey = 255;
+                                            IncreasePC(2);
+                                            return;
+                                        }
+                                    }
                                 }
                             }
 
                             // No key release detected; remain halted
                             Console.WriteLine("Waiting for key release...");
-                            pc -= 2; // Decrement PC to retry this opcode on the next cycle
+                            //pc -= 2; // Decrement PC to retry this opcode on the next cycle
                             break;
 
 
@@ -375,14 +386,21 @@ namespace Chip8Emulator
             ushort opcode = FetchOpcode();
             DecodeAndExecute(opcode);
 
-            if (delayTimer > 0) delayTimer--;
+            
+        }
+
+        public void SimulateTimers()
+        {
+            if (delayTimer > 0)
+            {
+                Console.WriteLine($"Delay Timer: {delayTimer}. Counting down");
+                delayTimer--;
+            }
             if (soundTimer > 0)
             {
                 soundTimer--;
                 if (soundTimer == 1) PlayBeep();
             }
-
-            Array.Copy(Keypad, previousKeyState, Keypad.Length);
         }
 
         private void IncreasePC(int amount)
