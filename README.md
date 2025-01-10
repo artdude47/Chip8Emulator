@@ -1,5 +1,5 @@
 #CHIP-8 Emulator
-A simple CHIP-8 emulator writted in C# using WinForms, indended to act as a portfolio project
+A simple CHIP-8 emulator written in C# using WinForms, intended to act as a portfolio project
 
 ## Descritpion
 
